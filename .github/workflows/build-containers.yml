@@ -25,10 +25,10 @@ jobs:
 
       - name: Read kubectl versions
         id: kubectl_versions
-        shell: |
+        shell: bash
+        run: |
           RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
           echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
-
 
   debug:
     runs-on: ubuntu-latest
