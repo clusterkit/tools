@@ -2,8 +2,8 @@ name: build clusterkit/tool
 
 on:
   push:
-    tags:
-    - v*.*
+    branch:
+    - master
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -13,53 +13,63 @@ env:
 
 jobs:
   buildx:
+    strategy:
+      matrix:
+        # Release versions can be found here: https://kubernetes.io/releases/
+        kubectl_version:
+          - 1.25.4
+          - 1.24.8
+          - 1.23.14
+          - 1.22.15
+
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    # Login against a Docker registry except on PR
-    # https://github.com/docker/login-action
-    - name: Log into registry ${{ env.REGISTRY }}
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    # Add support for more platforms with QEMU (optional)
-    # https://github.com/docker/setup-qemu-action
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      # Add support for more platforms with QEMU (optional)
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-    # Extract metadata (tags, labels) for Docker
-    # https://github.com/docker/metadata-action
-    - name: Extract Docker metadata
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=sha
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ matrix.kubectl_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ matrix.kubectl_version }}
+            type=sha
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Get latest helm version
-      run: bash get-binaries.sh ${{ github.ref_type }}
+      - name: Get latest helm version
+        run: bash get-binaries.sh ${{ github.ref_type }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: ${{ github.ref_type == 'tag' }}
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
