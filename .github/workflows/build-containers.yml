@@ -17,6 +17,12 @@ jobs:
     outputs:
       settings: ${{ steps.settings-yaml.outputs.settings }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies.
+        run: bash .github/scripts/install-deps.sh
+
       - name: Read settings.yaml
         id: settings-yaml
         run: |
@@ -40,6 +46,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Install dependencies.
+        run: bash .github/scripts/install-deps.sh
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
