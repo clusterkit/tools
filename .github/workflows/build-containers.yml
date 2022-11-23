@@ -12,10 +12,10 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  settings:
+  init:
     runs-on: ubuntu-latest
     outputs:
-      kubectl_versions: ${{ steps.kubectl_versions.outputs.settings }}
+      settings: ${{ fromJSON(steps.settings.outputs.stdout) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,27 +23,28 @@ jobs:
       - name: Install dependencies
         run: sudo bash .github/scripts/install-deps.sh
 
-      - name: Read kubectl_versions from settings.yaml
-        id: kubectl_versions
-        run: |
-          echo "kubectl_versions=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)" >> $GITHUB_OUTPUT
+      - name: Reading settings.yaml
+        uses: mathiasvr/command-output@v1
+        continue-on-error: false
+        id: settings
+        with:
+          run: yq -oj -I0 '.' settings.yaml
 
   debug:
     runs-on: ubuntu-latest
     needs:
-      - settings
+      - init
     steps:
-      - run: echo "${{ toJSON(needs.settings.outputs.kubectl_versions) }}"
-      - run: echo "${{ toJSON(needs.settings.outputs) }}"
+      - run: echo "${{ toJSON(needs.init.outputs.settings.kubectl.versions) }}"
 
   build_containers:
     needs:
-      - settings
+      - init
 
     strategy:
       matrix:
         os: [ 'ubuntu-latest' ]
-        kubectl_version: ${{ fromJSON(needs.settings.outputs.kubectl_versions) }}
+        kubectl_version: ${{ fromJSON(needs.init.outputs.settings.kubectl.versions) }}
 
     runs-on: ${{ matrix.os }}
 
