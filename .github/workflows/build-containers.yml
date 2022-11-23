@@ -15,7 +15,7 @@ jobs:
   settings:
     runs-on: ubuntu-latest
     outputs:
-      kubectl_versions: ${{ fromJSON(steps.kubectl_versions.outputs.stdout) }}
+      kubectl_versions: ${{ steps.kubectl_versions.outputs.stdout }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
     strategy:
       matrix:
         os: [ 'ubuntu-latest' ]
-        kubectl_version: ${{ needs.settings.outputs.kubectl_versions }}
+        kubectl_version: ${{ fromJSON(needs.settings.outputs.kubectl_versions) }}
 
     runs-on: ${{ matrix.os }}
 
