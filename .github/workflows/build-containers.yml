@@ -30,7 +30,7 @@ jobs:
           
   build_containers:
     needs:
-      - get_settings
+      - settings
 
     strategy:
       matrix:
