@@ -3,7 +3,11 @@
 set -e
 
 KUBE_VERSION="${1}"
-HELM_VERSION=$(curl -sL https://api.github.com/repos/helm/helm/releases/latest | yq '.tag_name')
+
+HELM_VERSION=$(yq ".helm.version" settings.yaml)
+if [[ "${HELM_VERSION}" == "latest" ]] || [[ "${HELM_VERSION}" == "" ]]; then
+    HELM_VERSION=$(curl -sL https://api.github.com/repos/helm/helm/releases/latest | yq '.tag_name')
+fi
 
 for arch in {arm64,amd64}; do
     arch_path="./binaries/${arch}"

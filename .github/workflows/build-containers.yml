@@ -12,16 +12,24 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-containers:
+  get_settings:
+    runs-on: ubuntu-latest
+    outputs:
+      settings: ${{ steps.settings-yaml.outputs.settings }}
+    steps:
+      - name: Read settings.yaml
+        id: settings-yaml
+        run: |
+          echo ::set-output name=settings::$(yq -oj '.' settings.yaml)
+          
+  build_containers:
+    needs:
+      - get_settings
+
     strategy:
       matrix:
         os: [ 'ubuntu-latest' ]
-        # Release versions can be found here: https://kubernetes.io/releases/
-        kubectl_version:
-          - 1.22.15
-          - 1.23.14
-          - 1.24.8
-          - 1.25.4
+        kubectl_version: ${{ needs.get_settings.outputs.settings.kubectl.versions }}
 
     runs-on: ${{ matrix.os }}
 
