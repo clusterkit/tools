@@ -37,7 +37,7 @@ jobs:
     needs:
       - settings
     steps:
-      - run: echo "${{ needs.settings.outputs.kubectl_versions }}"
+      - run: echo '${{ fromJSON(needs.settings.outputs.kubectl_versions) }}'
 
   build_containers:
     needs:
