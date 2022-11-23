@@ -15,7 +15,6 @@ jobs:
   settings:
     runs-on: ubuntu-latest
     outputs:
-      all: ${{ fromJSON(steps.all.outputs.stdout) }}
       kubectl_versions: ${{ fromJSON(steps.kubectl_versions.outputs.stdout) }}
     steps:
       - name: Checkout
@@ -29,13 +28,6 @@ jobs:
         run: |
           RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
           echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
-
-      - name: Read all settings
-        id: all
-        run: |
-          RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
-          echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
-
 
   debug:
     runs-on: ubuntu-latest
