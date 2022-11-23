@@ -26,7 +26,7 @@ jobs:
       - name: Read settings.yaml
         id: settings-yaml
         run: |
-          echo "settings=$(yq -oj '.' settings.yaml)" | tee -a $GITHUB_OUTPUT
+          echo "settings=$(yq -oj -I0 '.' settings.yaml)" | tee -a $GITHUB_OUTPUT
           
   build_containers:
     needs:
