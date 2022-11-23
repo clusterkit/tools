@@ -27,18 +27,8 @@ jobs:
         id: kubectl_versions
         shell: bash
         run: |
-          RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
-          RESULT="${RESULT#\"}" # remove leading quote
-          RESULT="${RESULT%\"}" # remove trailing quote
           RESULT=$(yq -oj -I0 '.kubectl.versions' settings.yaml)
-          echo "stdout=${RESULT}" >> $GITHUB_OUTPUT
-
-  debug:
-    runs-on: ubuntu-latest
-    needs:
-      - settings
-    steps:
-      - run: echo '${{ fromJSON(needs.settings.outputs.kubectl_versions) }}'
+          echo "stdout=${RESULT}" | tee -a $GITHUB_OUTPUT
 
   build_containers:
     needs:
