@@ -26,13 +26,14 @@ jobs:
       - name: Read kubectl_versions from settings.yaml
         id: kubectl_versions
         run: |
-          echo "kubectl_versions=$(yq -oj -I0 '.kubectl.versions | to_json' settings.yaml)" | tee -a $GITHUB_OUTPUT
+          echo "kubectl_versions=$(yq -oj -I0 '.kubectl.versions | to_json' settings.yaml)" >> $GITHUB_OUTPUT
 
   debug:
     runs-on: ubuntu-latest
     needs:
       - settings
     steps:
+      - run: echo "${{ toJSON(needs.settings.outputs.kubectl_versions) }}"
       - run: echo "${{ toJSON(needs.settings.outputs) }}"
 
   build_containers:
