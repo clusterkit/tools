@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  get_settings:
+  settings:
     runs-on: ubuntu-latest
     outputs:
       kubectl_versions: ${{ steps.kubectl_versions.outputs.settings }}
