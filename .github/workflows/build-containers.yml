@@ -28,13 +28,13 @@ jobs:
         id: kubectl_versions
         run: |
           RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
-          echo ${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
+          echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
 
       - name: Read all settings
         id: all
         run: |
           RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
-          echo ${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
+          echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
 
 
   debug:
