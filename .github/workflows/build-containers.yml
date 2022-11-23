@@ -28,7 +28,9 @@ jobs:
         shell: bash
         run: |
           RESULT=$(yq -oj -I0 '.kubectl.versions | to_json(0)' settings.yaml)
-          echo stdout=${${RESULT#\"}%\"} >> $GITHUB_OUTPUT
+          RESULT="${RESULT#\"}" # remove leading quote
+          RESULT="${RESULT%\"}" # remove trailing quote
+          echo "stdout=${RESULT}" >> $GITHUB_OUTPUT
 
   debug:
     runs-on: ubuntu-latest
