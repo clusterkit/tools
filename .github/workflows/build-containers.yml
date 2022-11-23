@@ -15,7 +15,7 @@ jobs:
   get_settings:
     runs-on: ubuntu-latest
     outputs:
-      settings: ${{ steps.kubectl_versions.outputs.settings }}
+      kubectl_versions: ${{ steps.kubectl_versions.outputs.settings }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
