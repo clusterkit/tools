@@ -27,9 +27,6 @@ Spawning a shell directly in a cluster with a specific service account can be do
 ```
 # inside the cluster with specific service account
 kubectl run --rm -it --overrides='{ "spec": { "serviceAccount": "<service-account-here>" }  }' --image ghcr.io/clusterkit/tools:1.23 -- bash
-
-# admin inside of kind cluster
-kubectl run -n kube-system --rm -it --overrides='{ "spec": { "serviceAccount": "kindnet" }  }' --image ghcr.io/clusterkit/tools:1.23 -- bash
 ```
 
 Commands can be called like this.
