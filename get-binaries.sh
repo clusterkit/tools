@@ -14,7 +14,7 @@ for arch in {arm64,amd64}; do
     mkdir -p "${arch_path}" "${arch_download_path}"
 
     # get kubectl binary
-    curl -L https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/${arch}/kubectl -o "${arch_path}/kubectl"
+    curl -L https://dl.k8s.io/release/v${KUBE_VERSION}/bin/linux/${arch}/kubectl -o "${arch_path}/kubectl"
 
     # get helm binary
     curl -sL -o- https://get.helm.sh/helm-${HELM_VERSION}-linux-${arch}.tar.gz | tar -xzv -C "${arch_download_path}"
