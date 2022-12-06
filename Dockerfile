@@ -7,7 +7,7 @@ COPY ./binaries/${TARGETARCH}/helm /bin/helm
 COPY ./binaries/${TARGETARCH}/kustomize /bin/kustomize
 COPY ./binaries/${TARGETARCH}/kubeconform /bin/kubeconform
 
-RUN apk add --update ca-certificates yq jq bash \
+RUN apk add --update ca-certificates yq jq bash git \
     && apk add -t deps \
     && apk add --update curl \
     && apk del --purge deps \
