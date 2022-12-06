@@ -37,5 +37,5 @@ docker run --rm -it ghcr.io/clusterkit/tools:1.23 helm version --client
 
 # Building Locally
 ```
-docker build -t ghcr.io/tools:dev . --build-arg KUBE_VERSION=v1.25.4
+docker build -t ghcr.io/clusterkit/tools:dev . --build-arg KUBE_VERSION=v1.25.4
 ```
