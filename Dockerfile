@@ -1,18 +1,11 @@
 FROM alpine:3
 
+ARG KUBE_VERSION
 ARG TARGETARCH
 
-COPY ./binaries/${TARGETARCH}/kubectl /bin/kubectl
-COPY ./binaries/${TARGETARCH}/helm /bin/helm
-COPY ./binaries/${TARGETARCH}/kustomize /bin/kustomize
-COPY ./binaries/${TARGETARCH}/kubeconform /bin/kubeconform
-
-RUN apk add --update ca-certificates yq jq bash git \
-    && apk add -t deps \
-    && apk add --update curl \
-    && apk del --purge deps \
-    && rm /var/cache/apk/* \
-    && chmod +x /bin/kubectl /bin/helm /bin/kustomize /bin/kubeconform
+COPY settings.yaml /settings.yaml
+COPY setup.sh /usr/src/setup.sh
+RUN /bin/sh /usr/src/setup.sh
 
 # lock it down a bit
 RUN adduser --disabled-password --gecos "" tooluser

@@ -27,7 +27,7 @@ jobs:
         id: kubectl_versions
         shell: bash
         run: |
-          RESULT=$(yq -oj -I0 '.kubectl.versions' settings.yaml)
+          RESULT=$(yq -oj -I0 '[ .kubectl.versions[] | match("[0-9\.]+") | .string ]' settings.yaml)
           echo "stdout=${RESULT}" | tee -a $GITHUB_OUTPUT
 
   build_containers:
