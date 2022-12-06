@@ -87,9 +87,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Get latest helm version
-        run: bash get-binaries.sh v${{ matrix.kubectl_version }}
-
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
