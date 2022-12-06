@@ -36,8 +36,6 @@ docker run --rm -it ghcr.io/clusterkit/tools:1.23 helm version --client
 ```
 
 # Building Locally
-The Dockerfile expects the `TARGETARCH` to be set and binaries to be pre-fetched.
 ```
-bash get-binaries.sh 1.23.14
-docker build -t tools:1.23 .
+docker build -t ghcr.io/tools:dev . --build-arg KUBE_VERSION=v1.25.4
 ```
