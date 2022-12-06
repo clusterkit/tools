@@ -18,7 +18,7 @@ KUBE_VERSION="${KUBE_VERSION#[[:alpha:]]}"
 #--------------------------------------
 # Required OS Packages
 #--------------------------------------
-apk add --update ca-certificates yq jq bash git
+apk add --update ca-certificates yq jq bash git openssh-client
 apk add -t deps
 apk add --update curl
 apk del --purge deps
