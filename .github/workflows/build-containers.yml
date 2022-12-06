@@ -33,6 +33,11 @@ jobs:
   build_containers:
     needs:
       - settings
+    
+    # prevent two builds of the same tag
+    concurrency:
+      group: tools-${{ matrix.kubectl_version }}
+      cancel-in-progress: true
 
     strategy:
       matrix:
