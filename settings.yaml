@@ -2,15 +2,22 @@ kubectl:
   # update to the latest supported k8s releases
   # ref: https://kubernetes.io/releases
   versions:
-    - v1.25.4
-    - v1.24.8
-    - v1.23.14
+    - v1.26.1
+    - v1.25.6
+    - v1.24.10
+    - v1.23.16
 
+# update to the latest version of helm
+# ref: https://github.com/helm/helm/releases
 helm:
-  version: v3.10.2
+  version: v3.11.1
 
+# update to the latest version of kustomize
+# ref: https://github.com/kubernetes-sigs/kustomize/releases
 kustomize:
-  version: v4.5.7
+  version: v5.0.0
 
+# update to the latest version of kubeconform
+# ref: https://github.com/yannh/kubeconform/releases
 kubeconform:
-  version: v0.5.0
+  version: v0.6.1
